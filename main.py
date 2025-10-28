@@ -6,7 +6,7 @@ import asyncio
 
 # Load environment variables
 load_dotenv()
-TOKEN = os.getenv("DISCORD_TOKEN")
+TOKEN = os.getenv("MTQyOTUwNjI3NzU5OTQ4MTkzOQ.Gzy0GT.6gZKyZuq8CDkjxgcQV8G_TnOR8XO_T_CG2R3mo")
 
 # Enable all intents
 intents = discord.Intents.default()
