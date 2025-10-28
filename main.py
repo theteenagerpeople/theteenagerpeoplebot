@@ -1,43 +1,26 @@
+import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-import os
-import asyncio
 
-# Load environment variables
+# Load .env locally (ignored on Railway)
 load_dotenv()
+
 TOKEN = os.getenv("DISCORD_TOKEN")
 
-# Enable all intents
-intents = discord.Intents.default()
-intents.message_content = True
-intents.members = True
+if not TOKEN:
+    print("❌ ERROR: DISCORD_TOKEN not found. Check Railway Variables.")
+    exit(1)
 
-# Create bot with command tree (for slash commands)
+intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f"✅ Logged in as {bot.user} (ID: {bot.user.id})")
-    print("------")
-    try:
-        synced = await bot.tree.sync()
-        print(f"🔧 Synced {len(synced)} slash commands.")
-    except Exception as e:
-        print(f"❌ Failed to sync commands: {e}")
+    print(f"✅ Logged in as {bot.user}")
 
-# Load extensions (cogs)
-async def load_extensions():
-    for ext in ["cogs.general", "cogs.moderation"]:
-        try:
-            await bot.load_extension(ext)
-            print(f"Loaded {ext}")
-        except Exception as e:
-            print(f"Failed to load {ext}: {e}")
+@bot.tree.command(name="hello", description="Say hello!")
+async def hello(interaction: discord.Interaction):
+    await interaction.response.send_message(f"Hello, {interaction.user.name}! 👋")
 
-async def main():
-    async with bot:
-        await load_extensions()
-        await bot.start(TOKEN)
-
-asyncio.run(main())
+bot.run(TOKEN)
